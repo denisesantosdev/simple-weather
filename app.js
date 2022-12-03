@@ -10,13 +10,11 @@ function getUserLocation() {
 
   if (navigator.geolocation) {
     const success = (position) => {
-      //console.log(position);
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
 
       saveUserLocation(latitude, longitude);
-      //console.log(latitude,longitude);
-      getData(latitude, longitude);
+      getCurrentWeatherData(latitude, longitude);
       getForecastData(latitude, longitude);
     };
 
@@ -24,7 +22,7 @@ function getUserLocation() {
       console.log(err.code);
       switch (err.code) {
         case 1:
-          alert("Please allow localization.");
+          alert("Please allow geolocation.");
           break;
         case 2:
           alert("Your location is unavailable.");
@@ -44,9 +42,8 @@ function getUserLocation() {
   }
 }
 
-function getData(lat, long) {
+function getCurrentWeatherData(lat, long) {
   const api = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=acd9c2a897e120f483b1535bbafe6a34&units=metric`;
-  //console.log(api);
 
   fetch(api)
     .then((response) => {
@@ -78,12 +75,11 @@ function retrieveUserLocation() {
 
   const [lat, long] = savedLocation;
 
-  getData(lat, long);
+  getCurrentWeatherData(lat, long);
   getForecastData(lat, long);
 }
 
 function displayData(data) {
-  //console.log(data);
   const userLocation = document.querySelector("#location");
   const weatherImg = document.querySelector(".weather-section img");
   const mainTemp = document.querySelector(".temp h1");
@@ -93,7 +89,7 @@ function displayData(data) {
   const clouds = document.querySelector(".clouds");
 
   const dataLocation = `${data.name}, ${data.sys.country}`;
-  const { humidity, temp, temp_max, temp_min } = data.main;
+  const { humidity, temp } = data.main;
   const { description, icon } = data.weather[0];
   const dataWind = data.wind.speed;
   const dataCloudness = data.clouds.all;
@@ -107,11 +103,11 @@ function displayData(data) {
   hum.innerText = `${humidity}%`;
   clouds.innerText = `${dataCloudness}%`;
 
-  setInterval(displayTime,1000)
+  setInterval(displayTime, 1000);
 }
 
 function displayForecast(data) {
-  const forecastSection = document.querySelector(".forecast-section");
+  const forecastSection = document.querySelector(".forecast");
 
   scrollForecast(forecastSection);
 
@@ -144,14 +140,12 @@ function displayForecast(data) {
     const newDate = new Date(time[i].replace(/-/g, "/"));
 
     forecastSection.innerHTML += `
-     <div class="forecast-day-card">
-    <p><span class="future-temp"></span>°</p>
-    <img src="img/weather-icons/${convertWeatherCode(
-      weatherCode[i]
-    )}.svg" alt="" />
-    <p class="week-day">${newDate.toLocaleString("en-us", {
-      weekday: "short",
-    })}</p>
+    <div class="forecast-day-card">
+      <p><span class="future-temp"></span>°</p>
+      <img src="img/weather-icons/${convertWeatherCode(weatherCode[i])}.svg" alt="" />
+      <p class="week-day">
+      ${newDate.toLocaleString("en-us", {weekday:"short",})}
+      </p>
     </div>
     `;
   }
@@ -173,13 +167,16 @@ function displayTime() {
     dateStyle: "medium",
   });
 
-  dayAndHour.innerText = `${newDate.toLocaleString("en-us", {
+  dayAndHour.innerText = 
+  `${newDate.toLocaleString("en-us", {
     weekday: "long",
-  })} | ${newDate.toLocaleString("en-us", { timeStyle: "medium" })}`;
+  })} | ${newDate.toLocaleString("en-us", { 
+    timeStyle: "medium" 
+  })}`;
 }
 
 function toggleMetric(temp, element) {
-  const metricCheckbox = document.querySelector("#metric");
+  const degreeCheckbox = document.querySelector("#metric");
   const degree = document.querySelector(".degree");
 
   const celsiusToFahrenheit = () => {
@@ -187,13 +184,13 @@ function toggleMetric(temp, element) {
   };
 
   const saveChosenMetric = () => {
-    const checkBoxState = metricCheckbox.checked;
+    const checkBoxState = degreeCheckbox.checked;
 
-    localStorage.setItem("chosenMetric", JSON.stringify(checkBoxState));
+    localStorage.setItem("fahrenheit", JSON.stringify(checkBoxState));
   };
 
   const retrieveChosenMetric = () => {
-    const checkBoxState = JSON.parse(localStorage.getItem("chosenMetric"));
+    const checkBoxState = JSON.parse(localStorage.getItem("fahrenheit"));
 
     let changeEvent = new Event("change", {
       bubbles: false,
@@ -201,13 +198,13 @@ function toggleMetric(temp, element) {
     });
 
     if (checkBoxState) {
-      metricCheckbox.checked = true;
-      metricCheckbox.dispatchEvent(changeEvent);
+      degreeCheckbox.checked = true;
+      degreeCheckbox.dispatchEvent(changeEvent);
     }
   };
 
-  metricCheckbox.addEventListener("change", () => {
-    if (metricCheckbox.checked) {
+  degreeCheckbox.addEventListener("change", () => {
+    if (degreeCheckbox.checked) {
       element.innerText = "";
       element.innerText = celsiusToFahrenheit().toFixed(0);
       degree.innerText = "°F";
@@ -225,26 +222,6 @@ function toggleMetric(temp, element) {
   return temp.toFixed(0);
 }
 
-function switchColors() {
-  const newDate = new Date();
-
-  const hour = newDate
-    .toLocaleString("en-us", { hourCycle: "h24", hour: "2-digit" })
-    .slice(0, 2);
-
-  const checkDayTime = () => {
-    if (hour > 5 && hour < 12) return "morning-clrs";
-    if (hour >= 12 && hour <= 17) return "afternoon-clrs";
-    if (hour > 17 && hour <= 24) return "night-clrs";
-    if (hour >= 1 && hour <= 5) return "night-clrs";
-  };
-
-  document.body.className = "";
-  document.body.classList.add(checkDayTime());
-}
-
-switchColors();
-
 function scrollForecast(element) {
   const arrowRight = document.querySelector(".arrow-right");
   const arrowLeft = document.querySelector(".arrow-left");
@@ -259,3 +236,23 @@ function scrollForecast(element) {
     element.scroll({ top: 0, left: (scrollNumber -= 20) });
   });
 }
+
+function switchColors() {
+  const newDate = new Date();
+
+  const hour = newDate
+    .toLocaleString("en-us", { hourCycle: "h24", hour: "2-digit" })
+    .slice(0, 2);
+
+  const checkDayTime = () => {
+    if (hour >= 5 && hour < 12) return "morning-clrs";
+    if (hour >= 12 && hour <= 17) return "afternoon-clrs";
+    if (hour > 17 && hour <= 24) return "night-clrs";
+    if (hour >= 1 && hour < 5) return "night-clrs";
+  };
+
+  document.body.className = "";
+  document.body.classList.add(checkDayTime());
+}
+
+switchColors();

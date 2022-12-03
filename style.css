@@ -6,8 +6,7 @@
 
 @font-face {
   font-family: "Roboto Thin";
-  src: url(font/roboto.thin.ttf);
-  type: TFF;
+  src: url(font/roboto.thin.ttf) format("truetype");
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
@@ -143,11 +142,11 @@ body {
   display: contents;
 }
 
-.test {
+.forecast-section {
   position: relative;
 }
 
-.forecast-section {
+.forecast {
   display: flex;
   gap: 0.5rem;
   overflow-y: auto;
@@ -162,7 +161,6 @@ body {
   padding: 1rem 0.5rem;
   border-radius: 0.6rem;
   border: 1px solid rgba(255, 255, 255, 0.373);
-  /* cursor: pointer; */
 }
 
 .forecast-section img {
@@ -202,7 +200,7 @@ body {
   }
 
   .arrow-right,
-  .arrow-left  {
+  .arrow-left {
     display: none;
   }
 }
