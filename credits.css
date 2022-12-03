@@ -1,0 +1,24 @@
+@font-face {
+  font-family: "Roboto Thin";
+  src: url(font/roboto.thin.ttf) format("truetype");
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap");
+
+body {
+  background-image: linear-gradient(248.66deg, #6192ca 0%, #7571ec 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: white;
+  font-family: "Roboto Thin", sans-serif;
+  font-weight: 300;
+}
+
+main {
+  padding: 1rem;
+}
+
+a {
+  color: white;
+  font-family: "Roboto", sans-serif;
+}

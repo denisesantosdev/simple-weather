@@ -240,9 +240,9 @@ function scrollForecast(element) {
 function switchColors() {
   const newDate = new Date();
 
-  const hour = newDate
+  const hour = 1/* newDate
     .toLocaleString("en-us", { hourCycle: "h24", hour: "2-digit" })
-    .slice(0, 2);
+    .slice(0, 2); */
 
   const checkDayTime = () => {
     if (hour >= 5 && hour < 12) return "morning-clrs";
