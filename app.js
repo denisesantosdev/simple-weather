@@ -19,7 +19,6 @@ function getUserLocation() {
     };
 
     const error = (err) => {
-      console.log(err.code);
       switch (err.code) {
         case 1:
           alert("Please allow geolocation.");
@@ -37,6 +36,7 @@ function getUserLocation() {
     };
 
     navigator.geolocation.getCurrentPosition(success, error);
+
   } else {
     document.body.innerHTML = "Your browser does not support geolocation.";
   }
@@ -123,6 +123,7 @@ function displayForecast(data) {
       1: "02d",
       2: "03d",
       3: "04d",
+      45: "04d",
       61: "10d",
       63: "09d",
       65: "11d",
@@ -240,9 +241,9 @@ function scrollForecast(element) {
 function switchColors() {
   const newDate = new Date();
 
-  const hour = 1/* newDate
+  const hour = newDate
     .toLocaleString("en-us", { hourCycle: "h24", hour: "2-digit" })
-    .slice(0, 2); */
+    .slice(0, 2); 
 
   const checkDayTime = () => {
     if (hour >= 5 && hour < 12) return "morning-clrs";
