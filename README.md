@@ -6,7 +6,7 @@
 ![mobile](https://github.com/denisesantosdev/simple-weather/blob/master/readme-assets/mobile.png)
 
 
-Simple weather web app build with CSS and Javascript. 
+Simple weather web app built with CSS and Javascript. 
 
 Features:
 
