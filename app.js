@@ -7,6 +7,8 @@ import {
   getErrorHandler,
   getSuccessHandler,
   getTodayTexts,
+  getWeatherData,
+  hydrateElements,
   printDayMetrics,
   retrieveChosenMetric,
   setBodyHTML,
@@ -57,23 +59,8 @@ function retrieveUserLocation() {
 }
 
 function displayData(data) {
-  const El = getElements();
-
-  const dataLocation = `${data.name}, ${data.sys.country}`;
-  const { humidity, temp } = data.main;
-  const { description, icon } = data.weather[0];
-  const dataWind = data.wind.speed;
-  const dataCloudness = data.clouds.all;
-
-  El.userLocation.innerText = dataLocation;
-  El.weatherImg.src = `img/weather-icons/${icon}.svg`;
-  El.weatherImg.alt = `${description}`;
-  El.mainTemp.innerText = toggleMetric(temp, El.mainTemp);
-  El.weatherDescription.innerText = description;
-  El.wind.innerText = `${dataWind}Km/h`;
-  El.hum.innerText = `${humidity}%`;
-  El.clouds.innerText = `${dataCloudness}%`;
-
+  const weatherData = getWeatherData(data);
+  hydrateElements(weatherData);
   setInterval(displayTime, 1000);
 }
 

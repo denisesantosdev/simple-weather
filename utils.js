@@ -104,7 +104,7 @@ export function celsiusToFahrenheit(temperature) {
   return temperature * (9 / 5) + 32;
 }
 
-export function saveChosenMetric(degreeCheckbox, checkBoxState) {
+export function saveChosenMetric(degreeCheckbox) {
   localStorage.setItem("fahrenheit", JSON.stringify(degreeCheckbox.checked));
 }
 
@@ -120,4 +120,34 @@ export function retrieveChosenMetric(degreeCheckbox) {
     degreeCheckbox.checked = true;
     degreeCheckbox.dispatchEvent(changeEvent);
   }
+}
+
+export function getWeatherData(data) {
+  const { humidity, temp } = data.main;
+  const { description, icon } = data.weather[0];
+  return {
+    dataLocation: `${data.name}, ${data.sys.country}`,
+    dataWind: data.wind.speed,
+    dataCloudness: data.clouds.all,
+    description,
+    icon,
+    humidity,
+    temp,
+  };
+}
+
+// prettier-ignore
+export function hydrateElements(weatherData) {
+  const { weatherDescription: wDesc } = getElements();
+  const El = getElements();
+  const wd = { ...weatherData };
+
+  El.weatherImg.src         = `img/weather-icons/${wd.icon}.svg`;
+  El.mainTemp.innerText     = toggleMetric(wd.temp, El.mainTemp);
+  El.wind.innerText         = `${wd.dataWind}Km/h`;
+  El.hum.innerText          = `${wd.humidity}%`;
+  El.clouds.innerText       = `${wd.dataCloudness}%`;
+  El.weatherImg.alt         = `${wd.description}`;
+  El.userLocation.innerText = wd.dataLocation;
+  wDesc.innerText           = wd.description;
 }
