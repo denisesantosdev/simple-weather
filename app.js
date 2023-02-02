@@ -4,6 +4,26 @@ window.addEventListener("load", () => {
     : getUserLocation();
 });
 
+function getElements() {
+  return {
+  userLocation: document.querySelector("#location"),
+  weatherImg: document.querySelector(".weather-section img"),
+  mainTemp: document.querySelector(".temp h1"),
+  weatherDescription: document.querySelector(".weather-description"),
+  wind: document.querySelector(".wind"),
+  hum: document.querySelector(".hum"),
+  clouds: document.querySelector(".clouds"),
+  forecastSection: document.querySelector(".forecast"),
+  futureTemps: document.querySelectorAll(".future-temp"),
+  todayDate: document.querySelector(".date"),
+  dayAndHour: document.querySelector(".day-and-hour"),
+  degreeCheckbox: document.querySelector("#metric"),
+  degree: document.querySelector(".degree"),
+  arrowRight: document.querySelector(".arrow-right"),
+  arrowLeft: document.querySelector(".arrow-left"),
+}
+}
+
 function getUserLocation() {
   let latitude;
   let longitude;
@@ -80,13 +100,7 @@ function retrieveUserLocation() {
 }
 
 function displayData(data) {
-  const userLocation = document.querySelector("#location");
-  const weatherImg = document.querySelector(".weather-section img");
-  const mainTemp = document.querySelector(".temp h1");
-  const weatherDescription = document.querySelector(".weather-description");
-  const wind = document.querySelector(".wind");
-  const hum = document.querySelector(".hum");
-  const clouds = document.querySelector(".clouds");
+  const El = getElements()
 
   const dataLocation = `${data.name}, ${data.sys.country}`;
   const { humidity, temp } = data.main;
@@ -94,20 +108,20 @@ function displayData(data) {
   const dataWind = data.wind.speed;
   const dataCloudness = data.clouds.all;
 
-  userLocation.innerText = dataLocation;
-  weatherImg.src = `img/weather-icons/${icon}.svg`;
-  weatherImg.alt = `${description}`;
-  mainTemp.innerText = toggleMetric(temp, mainTemp);
-  weatherDescription.innerText = description;
-  wind.innerText = `${dataWind}Km/h`;
-  hum.innerText = `${humidity}%`;
-  clouds.innerText = `${dataCloudness}%`;
+  El.userLocation.innerText = dataLocation;
+  El.weatherImg.src = `img/weather-icons/${icon}.svg`;
+  El.weatherImg.alt = `${description}`;
+  El.mainTemp.innerText = toggleMetric(temp, El.mainTemp);
+  El.weatherDescription.innerText = description;
+  El.wind.innerText = `${dataWind}Km/h`;
+  El.hum.innerText = `${humidity}%`;
+  El.clouds.innerText = `${dataCloudness}%`;
 
   setInterval(displayTime, 1000);
 }
 
 function displayForecast(data) {
-  const forecastSection = document.querySelector(".forecast");
+  const { forecastSection } = getElements()
 
   scrollForecast(forecastSection);
 
@@ -151,7 +165,7 @@ function displayForecast(data) {
     `;
   }
 
-  const futureTemps = document.querySelectorAll(".future-temp");
+  const { futureTemps } = getElements()
 
   for (let i = 0; i < futureTemps.length; i++) {
     futureTemps[i].innerText = toggleMetric(maxTemp[i], futureTemps[i]);
@@ -161,8 +175,7 @@ function displayForecast(data) {
 function displayTime() {
   const newDate = new Date();
 
-  const todayDate = document.querySelector(".date");
-  const dayAndHour = document.querySelector(".day-and-hour");
+  const { todayDate, dayAndHour } = getElements()
 
   todayDate.innerText = newDate.toLocaleString("en-us", {
     dateStyle: "medium",
@@ -177,8 +190,7 @@ function displayTime() {
 }
 
 function toggleMetric(temp, element) {
-  const degreeCheckbox = document.querySelector("#metric");
-  const degree = document.querySelector(".degree");
+  const { degree, degreeCheckbox } = getElements()
 
   const celsiusToFahrenheit = () => {
     return temp * (9 / 5) + 32;
@@ -224,8 +236,7 @@ function toggleMetric(temp, element) {
 }
 
 function scrollForecast(element) {
-  const arrowRight = document.querySelector(".arrow-right");
-  const arrowLeft = document.querySelector(".arrow-left");
+  const { arrowLeft, arrowRight } = getElements()
 
   let scrollNumber = 0;
 
