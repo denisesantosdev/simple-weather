@@ -1,3 +1,5 @@
+import { getErrorHandler, getSuccessHandler } from "./utils.js";
+
 window.addEventListener("load", () => {
   localStorage.hasOwnProperty("location")
     ? retrieveUserLocation()
@@ -25,44 +27,17 @@ function getElements() {
 }
 
 function getUserLocation() {
-  let latitude;
-  let longitude;
-
   if (navigator.geolocation) {
-    const success = (position) => {
-      latitude = position.coords.latitude;
-      longitude = position.coords.longitude;
-
-      saveUserLocation(latitude, longitude);
-      getCurrentWeatherData(latitude, longitude);
-      getForecastData(latitude, longitude);
-    };
-
-    const error = (err) => {
-      switch (err.code) {
-        case 1:
-          alert("Please allow geolocation.");
-          break;
-        case 2:
-          alert("Your location is unavailable.");
-          break;
-        case 3:
-          alert("The request has timed out.");
-          break;
-        default:
-          alert("An unknown error occurred.");
-          break;
-      }
-    };
+    const success = getSuccessHandler()
+    const error = getErrorHandler()
 
     navigator.geolocation.getCurrentPosition(success, error);
-
   } else {
     document.body.innerHTML = "Your browser does not support geolocation.";
   }
 }
 
-function getCurrentWeatherData(lat, long) {
+export function getCurrentWeatherData(lat, long) {
   const api = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=acd9c2a897e120f483b1535bbafe6a34&units=metric`;
 
   fetch(api)
@@ -74,7 +49,7 @@ function getCurrentWeatherData(lat, long) {
     });
 }
 
-function getForecastData(lat, long) {
+export function getForecastData(lat, long) {
   const api = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true&daily=temperature_2m_max&timezone=GMT&daily=temperature_2m_min&daily=weathercode&daily=windspeed_10m_max&daily=precipitation_sum`;
 
   fetch(api)
@@ -86,7 +61,7 @@ function getForecastData(lat, long) {
     });
 }
 
-function saveUserLocation(lat, long) {
+export function saveUserLocation(lat, long) {
   localStorage.setItem("location", JSON.stringify([lat, long]));
 }
 
