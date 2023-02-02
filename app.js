@@ -1,6 +1,11 @@
 import { getURL } from './getURLs.js';
 import { TEXT } from './texts.js';
-import { getErrorHandler, getSuccessHandler, setBodyHTML } from './utils.js';
+import {
+  getErrorHandler,
+  getSuccessHandler,
+  getTodayTexts,
+  setBodyHTML,
+} from './utils.js';
 
 window.addEventListener('load', () => {
   localStorage.hasOwnProperty('location')
@@ -63,10 +68,10 @@ export function saveUserLocation(lat, long) {
 function retrieveUserLocation() {
   const savedLocation = JSON.parse(localStorage.getItem('location'));
 
-  const [lat, long] = savedLocation;
+  const [latitude, longitude] = savedLocation;
 
-  getCurrentWeatherData(lat, long);
-  getForecastData(lat, long);
+  getCurrentWeatherData(latitude, longitude);
+  getForecastData(latitude, longitude);
 }
 
 function displayData(data) {
@@ -91,7 +96,7 @@ function displayData(data) {
 }
 
 function displayForecast(data) {
-  const { forecastSection } = getElements();
+  const { forecastSection, futureTemps } = getElements();
 
   scrollForecast(forecastSection);
 
@@ -137,8 +142,6 @@ function displayForecast(data) {
     `;
   }
 
-  const { futureTemps } = getElements();
-
   for (let i = 0; i < futureTemps.length; i++) {
     futureTemps[i].innerText = toggleMetric(maxTemp[i], futureTemps[i]);
   }
@@ -146,18 +149,11 @@ function displayForecast(data) {
 
 function displayTime() {
   const newDate = new Date();
-
   const { todayDate, dayAndHour } = getElements();
+  const { getTodayDataText, getDayAndHourText } = getTodayTexts(newDate);
 
-  todayDate.innerText = newDate.toLocaleString('en-us', {
-    dateStyle: 'medium',
-  });
-
-  dayAndHour.innerText = `${newDate.toLocaleString('en-us', {
-    weekday: 'long',
-  })} | ${newDate.toLocaleString('en-us', {
-    timeStyle: 'medium',
-  })}`;
+  todayDate.innerText = getTodayDataText();
+  dayAndHour.innerText = getDayAndHourText();
 }
 
 function toggleMetric(temp, element) {
