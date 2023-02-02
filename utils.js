@@ -35,3 +35,7 @@ export function getSuccessHandler() {
         getForecastData(latitude, longitude);
       };
 }
+
+export function setBodyHTML(newBodyHTML) {
+  document.body.innerHTML = newBodyHTML
+}

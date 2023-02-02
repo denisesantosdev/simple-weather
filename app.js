@@ -1,4 +1,6 @@
-import { getErrorHandler, getSuccessHandler } from './utils.js';
+import { getURL } from './getURLs.js';
+import { TEXT } from './texts.js';
+import { getErrorHandler, getSuccessHandler, setBodyHTML } from './utils.js';
 
 window.addEventListener('load', () => {
   localStorage.hasOwnProperty('location')
@@ -30,35 +32,28 @@ function getUserLocation() {
   if (navigator.geolocation) {
     const success = getSuccessHandler();
     const error = getErrorHandler();
-
     navigator.geolocation.getCurrentPosition(success, error);
   } else {
-    document.body.innerHTML = 'Your browser does not support geolocation.';
+    setBodyHTML(TEXT.error.TEXT_NO_GEOLOCATION_BROWSER_SUPPORT);
   }
 }
 
-export function getCurrentWeatherData(lat, long) {
-  const api = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=acd9c2a897e120f483b1535bbafe6a34&units=metric`;
+export function getCurrentWeatherData(latitude, longitude) {
+  const apiURL = getURL['data'](latitude, longitude);
 
-  fetch(api)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      displayData(data);
-    });
+  fetch(apiURL)
+    .then(response => response.json())
+    .then(data => displayData(data))
+    .catch(error => console.error(error));
 }
 
-export function getForecastData(lat, long) {
-  const api = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&current_weather=true&daily=temperature_2m_max&timezone=GMT&daily=temperature_2m_min&daily=weathercode&daily=windspeed_10m_max&daily=precipitation_sum`;
+export function getForecastData(latitude, longitude) {
+  const apiURL = getURL['forest'](latitude, longitude);
 
-  fetch(api)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      displayForecast(data);
-    });
+  fetch(apiURL)
+    .then(response => response.json())
+    .then(data => displayForecast(data))
+    .catch(error => console.error(error));
 }
 
 export function saveUserLocation(lat, long) {
