@@ -1,17 +1,18 @@
+import { getWeatherData } from "../../scripts/api.js";
 import {
   createForecastDayCards,
   hydrateElements,
   printDayMetrics,
   setBodyClass,
   setBodyHTML,
+  setDisplayTime,
 } from "../../scripts/dom-manipulation.js";
+import { getTodayTextsObject } from "../../scripts/get-texts.js";
 import { getURL } from "../../scripts/get-URLs.js";
-import { checkDayTime, getDailyData } from "../../scripts/utils.js";
-import { getElements } from "../../scripts/instance-factories.js";
-import { getWeatherData } from "../../scripts/api.js";
-import { fetchChosenMetric } from "../../scripts/local-storage.js";
-import { getTodayTexts } from "../../scripts/get-texts.js";
 import { getErrorHandler, getSuccessHandler, handleChangeDegreeCheckbox } from "../../scripts/handlers.js";
+import { getElements } from "../../scripts/instance-factories.js";
+import { fetchChosenMetric } from "../../scripts/local-storage.js";
+import { checkDayTime, getDailyData } from "../../scripts/utils.js";
 
 window.addEventListener("load", () => {
   localStorage.hasOwnProperty("location") ? fetchUserLocation() : getUserLocation();
@@ -74,11 +75,9 @@ function displayForecast(data) {
 
 function displayTime() {
   const newDate = new Date();
-  const { todayDate, dayAndHour } = getElements();
-  const { getTodayDataText, getDayAndHourText } = getTodayTexts(newDate);
+  const todayTexts = getTodayTextsObject(newDate);
 
-  todayDate.innerText = getTodayDataText();
-  dayAndHour.innerText = getDayAndHourText();
+  setDisplayTime(todayTexts);
 }
 
 export function toggleMetric(temperature, element) {
@@ -104,12 +103,10 @@ function scrollForecast(element) {
   });
 }
 
-function switchColors() {
+(function switchColors() {
   const newDate = new Date();
   const hour = newDate.toLocaleString("en-us", { hourCycle: "h24", hour: "2-digit" }).slice(0, 2);
   const dayTime = checkDayTime(hour);
 
   setBodyClass(dayTime);
-}
-
-switchColors();
+})()

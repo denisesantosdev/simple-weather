@@ -1,6 +1,6 @@
-import { getElements } from "./instance-factories.js";
-import { createForecastDayCardHTML } from "./dom-element-creators.js";
 import { toggleMetric } from "../pages/Home/main.js";
+import { createForecastDayCardHTML } from "./dom-element-creators.js";
+import { getElements } from "./instance-factories.js";
 
 export function printDayMetrics(temperature) {
   const { futureTemps } = getElements();
@@ -41,4 +41,10 @@ export function createForecastDayCards(forecastSection, maxTemp, weatherCode, ti
 
     forecastSection.innerHTML += forecastHTML;
   }
+}
+
+export function setDisplayTime({ todayDataText, dayAndHourText }) {
+  const { todayDate, dayAndHour } = getElements();
+  todayDate.innerText = todayDataText;
+  dayAndHour.innerText = dayAndHourText;
 }

@@ -1,8 +1,8 @@
 import { getCurrentWeatherData, getForecastData, saveUserLocation } from "../pages/Home/main.js";
-import { getElements } from "./instance-factories.js";
-import { createLatitudeAndLongitude } from "./utils.js";
 import { celsiusToFahrenheit } from "./converters.js";
+import { getElements } from "./instance-factories.js";
 import { saveChosenMetric } from "./local-storage.js";
+import { createLatitudeAndLongitude } from "./utils.js";
 
 export function handleChangeDegreeCheckbox(temperature, element) {
   const { degree, degreeCheckbox } = getElements();
