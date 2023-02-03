@@ -1,4 +1,6 @@
+import { getElements } from "./instance-factories.js";
 import { createForecastDayCardHTML } from "./dom-element-creators.js";
+import { toggleMetric } from "../pages/Home/main.js";
 
 export function printDayMetrics(temperature) {
   const { futureTemps } = getElements();
@@ -22,7 +24,7 @@ export function hydrateElements(weatherData) {
   const El = getElements();
   const wd = { ...weatherData };
 
-  El.weatherImg.src = `img/weather-icons/${wd.icon}.svg`;
+  El.weatherImg.src = `../../assets/img/weather-icons/${wd.icon}.svg`;
   El.mainTemp.innerText = toggleMetric(wd.temp, El.mainTemp);
   El.wind.innerText = `${wd.dataWind}Km/h`;
   El.hum.innerText = `${wd.humidity}%`;
@@ -35,8 +37,8 @@ export function hydrateElements(weatherData) {
 export function createForecastDayCards(forecastSection, maxTemp, weatherCode, time) {
   for (let i = 0; i < maxTemp.length; i++) {
     const newDate = new Date(time[i].replace(/-/g, "/"));
-    const getForecastHTML = createForecastDayCardHTML(weatherCode[i], newDate);
+    const forecastHTML = createForecastDayCardHTML(weatherCode[i], newDate);
 
-    forecastSection.innerHTML += getForecastHTML;
+    forecastSection.innerHTML += forecastHTML;
   }
 }

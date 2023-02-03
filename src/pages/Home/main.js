@@ -1,23 +1,20 @@
-import { handleChangeDegreeCheckbox } from "../../scripts/callbacks.js";
-import { getURL } from "../../scripts/get-URLs.js";
-import { getData, getElements } from "../../scripts/instance-factories.js";
-import { TEXT } from "../../scripts/texts.js";
 import {
-  checkDayTime,
   createForecastDayCards,
-  getErrorHandler,
-  getSuccessHandler,
-  getTodayTexts,
-  getWeatherData,
   hydrateElements,
   printDayMetrics,
-  retrieveChosenMetric,
   setBodyClass,
   setBodyHTML,
-} from "../../scripts/utils.js";
+} from "../../scripts/dom-manipulation.js";
+import { getURL } from "../../scripts/get-URLs.js";
+import { checkDayTime, getDailyData } from "../../scripts/utils.js";
+import { getElements } from "../../scripts/instance-factories.js";
+import { getWeatherData } from "../../scripts/api.js";
+import { fetchChosenMetric } from "../../scripts/local-storage.js";
+import { getTodayTexts } from "../../scripts/get-texts.js";
+import { getErrorHandler, getSuccessHandler, handleChangeDegreeCheckbox } from "../../scripts/handlers.js";
 
 window.addEventListener("load", () => {
-  localStorage.hasOwnProperty("location") ? retrieveUserLocation() : getUserLocation();
+  localStorage.hasOwnProperty("location") ? fetchUserLocation() : getUserLocation();
 });
 
 function getUserLocation() {
@@ -52,7 +49,7 @@ export function saveUserLocation(lat, long) {
   localStorage.setItem("location", JSON.stringify([lat, long]));
 }
 
-function retrieveUserLocation() {
+function fetchUserLocation() {
   const savedLocation = JSON.parse(localStorage.getItem("location"));
   const [latitude, longitude] = savedLocation;
 
@@ -68,7 +65,7 @@ function displayData(data) {
 
 function displayForecast(data) {
   const { forecastSection } = getElements();
-  const { maxTemp, minTemp, rainSum, weatherCode, time } = getData().getDailyData(data);
+  const { maxTemp, minTemp, rainSum, weatherCode, time } = getDailyData(data);
 
   scrollForecast(forecastSection);
   createForecastDayCards(forecastSection, maxTemp, weatherCode, time);
@@ -88,7 +85,7 @@ export function toggleMetric(temperature, element) {
   const { degreeCheckbox } = getElements();
 
   degreeCheckbox.addEventListener("change", () => handleChangeDegreeCheckbox(temperature, element));
-  retrieveChosenMetric(degreeCheckbox);
+  fetchChosenMetric(degreeCheckbox);
 
   return temperature.toFixed(0);
 }
