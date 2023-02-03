@@ -1,8 +1,9 @@
-import { handleChangeDegreeCheckbox } from "./callbacks.js";
-import { getURL } from "./getURLs.js";
-import { getData, getElements } from "./instanceFactories.js";
-import { TEXT } from "./texts.js";
+import { handleChangeDegreeCheckbox } from "../../scripts/callbacks.js";
+import { getURL } from "../../scripts/get-URLs.js";
+import { getData, getElements } from "../../scripts/instance-factories.js";
+import { TEXT } from "../../scripts/texts.js";
 import {
+  checkDayTime,
   createForecastDayCards,
   getErrorHandler,
   getSuccessHandler,
@@ -11,8 +12,9 @@ import {
   hydrateElements,
   printDayMetrics,
   retrieveChosenMetric,
+  setBodyClass,
   setBodyHTML,
-} from "./utils.js";
+} from "../../scripts/utils.js";
 
 window.addEventListener("load", () => {
   localStorage.hasOwnProperty("location") ? retrieveUserLocation() : getUserLocation();
@@ -107,18 +109,10 @@ function scrollForecast(element) {
 
 function switchColors() {
   const newDate = new Date();
-
   const hour = newDate.toLocaleString("en-us", { hourCycle: "h24", hour: "2-digit" }).slice(0, 2);
+  const dayTime = checkDayTime(hour);
 
-  const checkDayTime = () => {
-    if (hour >= 5 && hour < 12) return "morning-clrs";
-    if (hour >= 12 && hour <= 17) return "afternoon-clrs";
-    if (hour > 17 && hour <= 24) return "night-clrs";
-    if (hour >= 1 && hour < 5) return "night-clrs";
-  };
-
-  document.body.className = "";
-  document.body.classList.add(checkDayTime());
+  setBodyClass(dayTime);
 }
 
 switchColors();

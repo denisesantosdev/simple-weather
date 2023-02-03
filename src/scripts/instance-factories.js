@@ -1,20 +1,3 @@
-export function getData() {
-  return {
-    getDailyData,
-    getElements,
-  };
-}
-
-export function getDailyData(data) {
-  return {
-    maxTemp: data.daily.temperature_2m_max,
-    minTemp: data.daily.temperature_2m_min,
-    rainSum: data.daily.precipitation_sum,
-    weatherCode: data.daily.weathercode,
-    time: data.daily.time,
-  };
-}
-
 export function getElements() {
   return {
     userLocation: document.querySelector("#location"),
