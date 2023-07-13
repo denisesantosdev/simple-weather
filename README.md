@@ -12,7 +12,6 @@ Features:
 
 * Color scheme changes depending on time of day. 
 * App detects and saves location.
-* More to come.
 
 [website link](https://simplestweather.netlify.app/)
 
